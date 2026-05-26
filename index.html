@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maths Practice: Year 7 & 8 Algebra</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Reusing your Dark Theme variables for consistency */
+        :root {
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: #1e293b;
+            --math-color: #ef4444;
+            --success-color: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-right: 1rem;
+            transition: color 0.2s;
+        }
+        
+        .back-btn:hover { color: var(--text-main); }
+
+        h1 { font-size: 2rem; border-bottom: 3px solid var(--math-color); padding-bottom: 0.5rem; display: inline-block;}
+
+        .section-card {
+            background-color: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            position: relative; /* Helps with positioning internal elements */
+        }
+
+        .section-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Score Board Styling */
+        .score-board {
+            display: flex;
+            gap: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        .score-correct { color: var(--success-color); }
+        .score-incorrect { color: var(--math-color); }
+
+        /* Toggle Buttons and Stats Container */
+        .toggles-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .toggle-btn {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid #334155;
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+        
+        .toggle-btn.timer-active {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--math-color);
+            border-color: var(--math-color);
+        }
+        
+        .stats-container {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+            min-height: 38px; /* Reserves space so toggling doesn't jump the page */
+        }
+
+        /* Resource Links Styling */
+        .resource-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            text-decoration: none;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            transition: background 0.2s;
+        }
+        
+        .resource-link:hover { background-color: rgba(255, 255, 255, 0.1); }
+        .resource-icon { color: var(--math-color); font-size: 1.5rem; margin-right: 15px; }
+
+        .problem-container {
+            text-align: center;
+            padding: 2rem 0 1rem 0;
+        }
+
+        #math-problem {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 5px;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        #answer-input {
+            font-size: 1.5rem;
+            padding: 10px;
+            width: 150px;
+            text-align: center;
+            border-radius: 6px;
+            border: 2px solid #334155;
+            background-color: #0f172a;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #answer-input:focus { outline: none; border-color: var(--math-color); }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: white;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover { opacity: 0.9; }
+        .btn-check { background-color: var(--math-color); }
+        .btn-next { background-color: #3b82f6; display: none; } /* Hidden until correct */
+
+        #feedback {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            height: 30px; /* Reserves space so page doesn't jump */
+        }
+        
+        /* Discrete Show Answer Button Styling */
+        .btn-discrete {
+            background-color: transparent;
+            color: var(--success-color); /* Green text */
+            border: 1px solid transparent;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            opacity: 0.6;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-discrete:hover {
+            opacity: 1;
+            background-color: rgba(16, 185, 129, 0.1); /* Subtle green background */
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        
+        .discrete-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            height: 30px; /* Holds vertical space */
+        }
+        
+        /* Level Tabs Styling */
+        .level-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .level-tab {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+        }
+        
+        .level-tab:hover {
+            color: var(--text-main);
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .level-tab.active {
+            background-color: var(--math-color);
+            color: white;
+            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Navigation -->
+        <div class="header-nav">
+            <button class="back-btn" onclick="alert('This will go back to the Maths Hub')"><i class="fa-solid fa-arrow-left"></i></button>
+            <h1>Algebra (Single Variable)</h1>
+        </div>
+
+        <!-- Resources Section -->
+        <div class="section-card">
+            <h2><i class="fa-solid fa-video"></i> Learn at Home Resources</h2>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Review these videos if you get stuck!</p>
+            
+            <a href="https://www.khanacademy.org/math/algebra-basics/alg-basics-linear-equations-and-inequalities/alg-basics-one-step-add-sub-equations/v/adding-and-subtracting-the-same-thing-from-both-sides" target="_blank" class="resource-link" id="resource-link-url">
+                <i class="fa-solid fa-graduation-cap resource-icon"></i>
+                <div>
+                    <strong id="resource-title">Khan Academy: Solving One-Step Equations (Add/Subtract)</strong>
+                    <div id="resource-desc" style="font-size: 0.85rem; color: var(--text-muted);">Step-by-step video tutorials for solving basic equations with addition or subtraction.</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Interactive Practice Section -->
+        <div class="section-card">
+            
+            <div class="level-tabs">
+                <button class="level-tab active" id="tab-1" onclick="setLevel(1)">Level 1</button>
+                <button class="level-tab" id="tab-2" onclick="setLevel(2)">Level 2</button>
+                <button class="level-tab" id="tab-3" onclick="setLevel(3)">Level 3</button>
+                <button class="level-tab" id="tab-4" onclick="setLevel(4)">Level 4</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 10px;">
+                <h2 style="margin-bottom: 0;"><i class="fa-solid fa-pencil"></i> Endless Practice</h2>
+                
+                <!-- Our New Control Panel -->
+                <div class="toggles-group">
+                    <button class="toggle-btn" id="btn-score" onclick="toggleScore()"><i class="fa-solid fa-eye"></i> Show Score</button>
+                    <button class="toggle-btn" id="btn-timer" onclick="toggleTimer()"><i class="fa-solid fa-stopwatch"></i> Start Timer</button>
+                </div>
+            </div>
+            
+            <!-- Dashboard stats (Score and Timer) -->
+            <div class="stats-container">
+                <div class="score-board" id="score-display" style="display: none;">
+                    <span class="score-correct"><i class="fa-solid fa-check"></i> Correct: <span id="correct-count">0</span></span>
+                    <span class="score-incorrect"><i class="fa-solid fa-xmark"></i> Incorrect: <span id="incorrect-count">0</span></span>
+                </div>
+                
+                <div class="score-board" id="timer-display" style="display: none; color: #38bdf8; border-color: #38bdf8;">
+                    <span><i class="fa-solid fa-clock"></i> <span id="time-text">00:00</span></span>
+                </div>
+            </div>
+            
+            <div class="problem-container">
+                <div id="math-problem">2x + 4 = 10</div>
+                
+                <div class="input-group">
+                    <input type="number" id="answer-input" placeholder="x =" onkeypress="handleEnter(event)">
+                    <button class="btn btn-check" id="check-btn" onclick="checkAnswer()">Check</button>
+                    <button class="btn btn-next" id="next-btn" onclick="generateProblem()">Next Problem <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+                
+                <div id="feedback"></div>
+            </div>
+            
+            <!-- Moved Show Answer button here for discretion -->
+            <div class="discrete-container">
+                <button class="btn-discrete" id="show-btn" onclick="showAnswer()">Show Answer</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // State variables to hold the current correct answer and scores
+        let currentAnswer = 0;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let isProblemSolved = false;
+
+        // Timer and Display State
+        let scoreVisible = false;
+        let timerActive = false;
+        let timerInterval = null;
+        let secondsElapsed = 0;
+
+        // Level State and Khan Academy Data
+        let currentLevel = 1;
+        
+        const levelData = {
+            1: {
+                url: "https://www.khanacademy.org/math/algebra-basics/alg-basics-linear-equations-and-inequalities/alg-basics-one-step-add-sub-equations/v/adding-and-subtracting-the-same-thing-from-both-sides",
+                title: "Solving One-Step Equations (Add/Subtract)",
+                desc: "Step-by-step video tutorials for solving basic equations with addition or subtraction."
+            },
+            2: {
+                url: "https://www.khanacademy.org/math/algebra-basics/alg-basics-linear-equations-and-inequalities/alg-basics-one-step-mult-div-equations/v/simple-equations",
+                title: "Solving One-Step Equations (Multiply/Divide)",
+                desc: "Learn how to isolate x when dealing with multiplication or division."
+            },
+            3: {
+                url: "https://www.khanacademy.org/math/algebra-basics/alg-basics-linear-equations-and-inequalities/alg-basics-two-step-equations-intro/v/solving-two-step-equations",
+                title: "Solving Two-Step Equations",
+                desc: "Combine operations to solve equations that take two steps to crack."
+            },
+            4: {
+                url: "https://www.khanacademy.org/math/algebra-basics/alg-basics-linear-equations-and-inequalities/alg-basics-equations-with-variables-on-both-sides/v/equations-with-variables-on-both-sides",
+                title: "Variables on Both Sides",
+                desc: "Master equations where the variable x appears on both sides of the equals sign."
+            }
+        };
+
+        function setLevel(level) {
+            currentLevel = level;
+            
+            // Update UI for active tab
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`tab-${i}`).classList.remove('active');
+            }
+            document.getElementById(`tab-${level}`).classList.add('active');
+            
+            // Update Khan Academy resources
+            document.getElementById('resource-link-url').href = levelData[level].url;
+            document.getElementById('resource-title').innerText = `Khan Academy: ${levelData[level].title}`;
+            document.getElementById('resource-desc').innerText = levelData[level].desc;
+            
+            // Generate a new problem based on the new level
+            generateProblem();
+        }
+
+        // Function to turn the score tracker on/off
+        function toggleScore() {
+            scoreVisible = !scoreVisible;
+            const scoreDisplay = document.getElementById('score-display');
+            const btnScore = document.getElementById('btn-score');
+            
+            if (scoreVisible) {
+                scoreDisplay.style.display = 'flex';
+                btnScore.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Hide Score';
+            } else {
+                scoreDisplay.style.display = 'none';
+                btnScore.innerHTML = '<i class="fa-solid fa-eye"></i> Show Score';
+            }
+        }
+
+        // Function to handle the stopwatch
+        function toggleTimer() {
+            timerActive = !timerActive;
+            const timerDisplay = document.getElementById('timer-display');
+            const btnTimer = document.getElementById('btn-timer');
+            
+            if (timerActive) {
+                // Turn on and start timer
+                timerDisplay.style.display = 'flex';
+                btnTimer.innerHTML = '<i class="fa-solid fa-stopwatch"></i> Stop & Reset';
+                btnTimer.classList.add('timer-active');
+                
+                secondsElapsed = 0;
+                updateTimerDisplay();
+                timerInterval = setInterval(() => {
+                    secondsElapsed++;
+                    updateTimerDisplay();
+                }, 1000);
+            } else {
+                // Turn off and clear timer
+                timerDisplay.style.display = 'none';
+                btnTimer.innerHTML = '<i class="fa-solid fa-stopwatch"></i> Start Timer';
+                btnTimer.classList.remove('timer-active');
+                clearInterval(timerInterval);
+            }
+        }
+
+        // Helper to format the seconds into 00:00 style
+        function updateTimerDisplay() {
+            const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+            document.getElementById('time-text').innerText = `${mins}:${secs}`;
+        }
+
+        // Function to generate a random math problem based on the selected level
+        function generateProblem() {
+            isProblemSolved = false; // Reset for the new problem
+            
+            // Generate a clean, whole number base for our equation
+            let x = Math.floor(Math.random() * 11) + 2; 
+            currentAnswer = x;
+            
+            let equationString = "";
+
+            if (currentLevel === 1) { 
+                // Level 1: One-step addition/subtraction (e.g., x + 5 = 12)
+                let b = Math.floor(Math.random() * 20) + 1;
+                let isAdd = Math.random() > 0.5;
+                let c = isAdd ? x + b : x - b;
+                equationString = isAdd ? `x + ${b} = ${c}` : `x - ${b} = ${c}`;
+                
+            } else if (currentLevel === 2) { 
+                // Level 2: One-step multiplication/division
+                let isMult = Math.random() > 0.5;
+                if (isMult) {
+                    let a = Math.floor(Math.random() * 8) + 2; // Coefficient 2 to 9
+                    let c = a * x;
+                    equationString = `${a}x = ${c}`;
+                } else {
+                    let a = Math.floor(Math.random() * 8) + 2; // Divisor 2 to 9
+                    let c = x; 
+                    currentAnswer = a * c; // For division, the answer is larger
+                    equationString = `x / ${a} = ${c}`;
+                }
+                
+            } else if (currentLevel === 3) {
+                // Level 3: Two-step equation (e.g., 3x + 2 = 14)
+                let a = Math.floor(Math.random() * 5) + 2; // Coefficient 2 to 6
+                let b = Math.floor(Math.random() * 15) + 1;
+                let isAdd = Math.random() > 0.5;
+                let c = isAdd ? (a * x) + b : (a * x) - b;
+                equationString = isAdd ? `${a}x + ${b} = ${c}` : `${a}x - ${b} = ${c}`;
+                
+            } else if (currentLevel === 4) {
+                // Level 4: Variables on both sides (e.g., 4x + 2 = 2x + 10)
+                let a = Math.floor(Math.random() * 4) + 3; // Coefficient 3 to 6
+                let c = Math.floor(Math.random() * 2) + 1; // Coefficient 1 to 2
+                let b = Math.floor(Math.random() * 15) + 1;
+                let isAdd = Math.random() > 0.5;
+                
+                let lhs = isAdd ? (a * x) + b : (a * x) - b;
+                let d = lhs - (c * x); // Calculate the remaining right-side constant
+                
+                let rhsSign = d >= 0 ? '+' : '-';
+                let cStr = c === 1 ? '' : c; // Don't write '1x', just write 'x'
+                
+                equationString = `${a}x ${isAdd ? '+' : '-'} ${b} = ${cStr}x ${rhsSign} ${Math.abs(d)}`;
+            }
+            
+            // Update the HTML to show the problem
+            document.getElementById('math-problem').innerText = equationString;
+            
+            // Reset the input field and feedback
+            let inputField = document.getElementById('answer-input');
+            inputField.value = '';
+            inputField.disabled = false;
+            inputField.focus();
+            
+            document.getElementById('feedback').innerText = '';
+            
+            // Show Check and Show Answer buttons, hide Next button
+            document.getElementById('check-btn').style.display = 'block';
+            document.getElementById('show-btn').style.display = 'block';
+            document.getElementById('next-btn').style.display = 'none';
+        }
+
+        // Function to check the student's answer
+        function checkAnswer() {
+            if (isProblemSolved) return; // Prevent checking multiple times
+
+            let studentAnswer = parseInt(document.getElementById('answer-input').value);
+            let feedbackElement = document.getElementById('feedback');
+            
+            if (isNaN(studentAnswer)) {
+                feedbackElement.innerText = "Please enter a number!";
+                feedbackElement.style.color = "#f59e0b"; // Yellow warning
+                return;
+            }
+
+            if (studentAnswer === currentAnswer) {
+                // Correct!
+                correctCount++;
+                document.getElementById('correct-count').innerText = correctCount;
+                isProblemSolved = true;
+
+                feedbackElement.innerText = "Great job! That's correct.";
+                feedbackElement.style.color = "var(--success-color)";
+                
+                // Disable input and swap buttons
+                document.getElementById('answer-input').disabled = true;
+                document.getElementById('check-btn').style.display = 'none';
+                document.getElementById('show-btn').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'block';
+                document.getElementById('next-btn').focus(); // Focus next button for easy clicking
+            } else {
+                // Incorrect!
+                incorrectCount++;
+                document.getElementById('incorrect-count').innerText = incorrectCount;
+
+                feedbackElement.innerText = "Not quite. Try again!";
+                feedbackElement.style.color = "var(--math-color)";
+                
+                // Clear the input so they can try again
+                let inputField = document.getElementById('answer-input');
+                inputField.value = '';
+                inputField.focus();
+            }
+        }
+
+        // Function to reveal the answer without giving a point
+        function showAnswer() {
+            if (isProblemSolved) return; // Prevent clicking if already solved
+
+            isProblemSolved = true;
+            
+            let inputField = document.getElementById('answer-input');
+            inputField.value = currentAnswer;
+            inputField.disabled = true;
+            
+            let feedbackElement = document.getElementById('feedback');
+            feedbackElement.innerText = `The answer is ${currentAnswer}. Keep practicing!`;
+            feedbackElement.style.color = "var(--text-muted)";
+            
+            // Hide Check and Show Answer buttons, show Next
+            document.getElementById('check-btn').style.display = 'none';
+            document.getElementById('show-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'block';
+            document.getElementById('next-btn').focus();
+        }
+
+        // Allow pressing "Enter" on the keyboard to submit the answer
+        function handleEnter(event) {
+            if (event.key === "Enter") {
+                checkAnswer();
+            }
+        }
+
+        // Generate the very first problem when the page loads
+        window.onload = function() {
+            generateProblem();
+        };
+    </script>
+</body>
+</html>
